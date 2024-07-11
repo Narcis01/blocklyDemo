@@ -3,6 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { BlocklyComponent } from './components/blockly/blockly.component';
+import { HttpClientModule } from '@angular/common/http';
+import { BlocklyGeneratorService } from './services/blockly-generator.service';
+import { DataService } from './services/data.service';
 
 @NgModule({
   declarations: [
@@ -10,9 +13,12 @@ import { BlocklyComponent } from './components/blockly/blockly.component';
     BlocklyComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule 
   ],
-  providers: [],
+  providers: [BlocklyGeneratorService,
+              DataService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
