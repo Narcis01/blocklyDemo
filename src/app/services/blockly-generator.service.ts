@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as Blockly from 'blockly';
+import {javascriptGenerator} from 'blockly/javascript';
 
 @Injectable({
   providedIn: 'root'
@@ -10,124 +11,54 @@ export class BlocklyGeneratorService {
 
   generateBlocks(): Blockly.WorkspaceSvg {
     
-    for(let i = 0; i < 2; i++){
-      Blockly.defineBlocksWithJsonArray([
-        {
-          "type": "caffe_machine number: " + i,
-          "message0": "Caffe Machine",
-          "inputsInline": false,
-          "colour": 230,
-          "tooltip": "Caffe Machine",
-          "helpUrl": "",
-          "mutator": "label"
-        },
-      ]);
-      Blockly.Blocks['caffe_machine number: ' + i] = {
-        init: function() {
-          this.appendDummyInput()
-            .appendField("Select your option for coffe machine number: " + i)
-  
-          this.appendDummyInput()
-            .appendField("Size")
-            .appendField(new Blockly.FieldDropdown([
-              ["Small", "SMALL"],
-              ["Medium", "MEDIUM"],
-              ["Large", "LARGE"]
-            ]), "SIZE");
-          
-          this.appendDummyInput()
-            .appendField("Type")
-            .appendField(new Blockly.FieldDropdown([
-              ["Espresso", "ESPRESSO"],
-              ["Americano", "AMERICANO"],
-              ["Cappuccino", "CAPPUCCINO"]
-            ]), "TYPE");
-  
-          this.appendDummyInput()
-            .appendField("Sugar")
-            .appendField(new Blockly.FieldDropdown([
-              ["No Sugar", "NO_SUGAR"],
-              ["One Spoon", "ONE_SPOON"],
-              ["Two Spoons", "TWO_SPOONS"]
-            ]), "SUGAR");
-  
-          this.appendDummyInput()
-            .appendField("Milk")
-            .appendField(new Blockly.FieldDropdown([
-              ["No Milk", "NO_MILK"],
-              ["Regular", "REGULAR"],
-              ["Soy", "SOY"]
-            ]), "MILK");
-          
-          this.setOutput(true, null);
-          this.setColour(230);
-          this.setTooltip("Caffe Machine");
-          this.setHelpUrl("");
-        }
-      };
-      this.toolboxString += `<block type="caffe_machine number: ${i}"></block>`;
+   
+    Blockly.defineBlocksWithJsonArray([{
+      "type": "caffe_machine",
+      "message0": 'coffe_machine ',
+      "colour": 160,
+      "nextStatement": "Action",
+    }]);
+    javascriptGenerator.forBlock['caffe_machine'] = function(block, generator) {
+ 
+      return `coffe_machine`;
     }
-    for(let i = 0; i < 2; i++){
-      Blockly.defineBlocksWithJsonArray([
-        {
-          "type": "tea_machine number: " + i,
-          "message0": "Tea Machine",
-          "inputsInline": false,
-          "colour": 230,
-          "tooltip": "Tea Machine",
-          "helpUrl": "",
-          "mutator": "label"
-        },
-      ]);
-      Blockly.Blocks['tea_machine number: ' + i] = {
-        init: function() {
-          this.appendDummyInput()
-            .appendField("Select your option for tea machine number: " + i)
-  
-          this.appendDummyInput()
-            .appendField("Size")
-            .appendField(new Blockly.FieldDropdown([
-              ["Small", "SMALL"],
-              ["Medium", "MEDIUM"],
-              ["Large", "LARGE"]
-            ]), "SIZE");
-          
-          this.appendDummyInput()
-            .appendField("Type")
-            .appendField(new Blockly.FieldDropdown([
-              ["Espresso", "ESPRESSO"],
-              ["Americano", "AMERICANO"],
-              ["Cappuccino", "CAPPUCCINO"]
-            ]), "TYPE");
-  
-          this.appendDummyInput()
-            .appendField("Sugar")
-            .appendField(new Blockly.FieldDropdown([
-              ["No Sugar", "NO_SUGAR"],
-              ["One Spoon", "ONE_SPOON"],
-              ["Two Spoons", "TWO_SPOONS"]
-            ]), "SUGAR");
-  
-          this.appendDummyInput()
-            .appendField("Milk")
-            .appendField(new Blockly.FieldDropdown([
-              ["No Milk", "NO_MILK"],
-              ["Regular", "REGULAR"],
-              ["Soy", "SOY"]
-            ]), "MILK");
-          
-          this.setOutput(true, null);
-          this.setColour(230);
-          this.setTooltip("Tea Machine");
-          this.setHelpUrl("");
-        }
-      };
+    // Register the definition.
+    this.toolboxString += `<category name="Coffee Machines" colour="#5C81A6">
+                           <block type="caffe_machine"></block>
+                          `;
+    //errors
+    Blockly.defineBlocksWithJsonArray([{
+      "type": "error_no_water",
+      "message0": 'error_no_water ',
+      "previousStatement": "Action",
+      "colour": 160,
+      "nextStatement": "Action",
+    }]);
+    javascriptGenerator.forBlock['error_no_water'] = function(block, generator) {
+      return ` no_water`;
+    }
+    // Register the definition.
+    this.toolboxString += `<category name="Errors" colour="#5CA65C">
+                            <block type="error_no_water"></block>
+                            `;
 
-      
-      this.toolboxString += `<block type="tea_machine number: ${i}"></block>`;
+    Blockly.defineBlocksWithJsonArray([{
+      "type": "error_no_sugar",
+      "message0": 'error_no_sugar ',
+      "previousStatement": "Action",
+      "colour": 160,
+      "nextStatement": "Action",
+    }]);
+    javascriptGenerator.forBlock['error_no_sugar'] = function(block, generator) {
+      return ` no_sugar`;
     }
+    // Register the definition.
+    this.toolboxString += `<block type="error_no_sugar"></block> </category> </category>`;
+
     return Blockly.inject('blocklyDiv', {
       toolbox: this.toolboxString
     });
   }
+
+  
 }
