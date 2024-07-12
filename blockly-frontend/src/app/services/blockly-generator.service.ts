@@ -22,6 +22,7 @@ export class BlocklyGeneratorService {
 
 
             category.machine.forEach((m) => {
+              this.toolboxString += `<category name="${m.name}" colour="#5C81A6">`;
               Blockly.defineBlocksWithJsonArray([{
                 "type": `${category.name}_${m.id}`,
                 "message0": `_${m.name}_`,
@@ -33,10 +34,26 @@ export class BlocklyGeneratorService {
               }
               // Register the definition.
               this.toolboxString += `<block type="${category.name}_${m.id}"></block> `;
+
+              m.errors.forEach((error) => {
+                Blockly.defineBlocksWithJsonArray([{
+                  "type": `${m.name}_error_${error.id}`,
+                  "message0": `${error.description}`,
+                  "colour": 160,
+                  "nextStatement": "Action",
+                  "previousStatement": "Action"
+                }]);
+                javascriptGenerator.forBlock[`${m.name}_error_${error.id}`] = function (block, generator) {
+                  return `${error.id}`;
+                }
+                // Register the definition.
+                this.toolboxString += `<block type="${m.name}_error_${error.id}"></block> `;
+              })
+              this.toolboxString += `</category>`;
             })
 
 
-
+           
             this.toolboxString += `</category>`;
 
           })

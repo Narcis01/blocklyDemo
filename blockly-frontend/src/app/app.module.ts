@@ -6,6 +6,7 @@ import { BlocklyComponent } from './components/blockly/blockly.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BlocklyGeneratorService } from './services/blockly-generator.service';
 import { DataService } from './services/data.service';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { DataService } from './services/data.service';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule 
+    HttpClientModule,
+    FormsModule 
   ],
   providers: [BlocklyGeneratorService,
               DataService

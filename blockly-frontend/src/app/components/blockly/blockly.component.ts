@@ -3,6 +3,7 @@ import * as Blockly from 'blockly';
 import { BlocklyGeneratorService } from 'src/app/services/blockly-generator.service';
 import {javascriptGenerator} from 'blockly/javascript';
 import { DataService } from 'src/app/services/data.service';
+import { Workspace } from 'src/app/common/workspace';
 
 @Component({
   selector: 'app-blockly',
@@ -12,14 +13,16 @@ import { DataService } from 'src/app/services/data.service';
 export class BlocklyComponent implements OnInit {
 
   workspace!: Blockly.WorkspaceSvg;
-
+  workspaceToSave: Workspace = new Workspace;
+  loadWorkspaces!: Workspace[];
+  inputTitle: string = '';
   constructor(private generateService: BlocklyGeneratorService,
               private dataService: DataService
   ) { }
 
   ngOnInit(): void {
     this.initializeBlockly();
-   
+    this.loadTableWorkspace();
   }
 
   initializeBlockly(): void {
@@ -58,20 +61,31 @@ export class BlocklyComponent implements OnInit {
   saveWorkspace() {
     const xml = Blockly.Xml.workspaceToDom(this.workspace);
     const xmlText = Blockly.Xml.domToText(xml);
-    localStorage.setItem('blocklyWorkspace', xmlText);
-    console.log('Workspace saved');
+    this.workspaceToSave.content = xmlText;
+    this.workspaceToSave.title = this.inputTitle;
+    this.dataService.saveWorkspace(this.workspaceToSave).subscribe( () => this.loadTableWorkspace());
   }
 
-  loadWorkspace() {
-    const xmlText = localStorage.getItem('blocklyWorkspace');
-    if (xmlText) {
-      const xml = Blockly.utils.xml.textToDom(xmlText);
+  loadWorkspace(workspaceString: string) {
+    
+    if (workspaceString) {
+      const xml = Blockly.utils.xml.textToDom(workspaceString);
       Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, this.workspace);
       console.log('Workspace loaded');
     } else {
       console.log('No workspace saved in localStorage');
     }
   }
+
+  loadTableWorkspace(){
+    this.dataService.getWorkspaces().subscribe(
+      data => {
+          this.loadWorkspaces = data;
+          console.log("Workspaces loaded");
+      }
+    )
+  }
+
 }
 
 
