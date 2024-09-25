@@ -1,0 +1,8 @@
+#blocklyDiv {
+    border-radius: 10px;  
+    overflow: hidden;     
+    height: 500px; 
+    width: 100%;
+  }
+
+  

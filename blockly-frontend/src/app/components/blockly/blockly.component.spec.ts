@@ -8,7 +8,7 @@ import { BlocklyGeneratorService } from 'src/app/services/blockly-generator.serv
 import { DataService } from 'src/app/services/data.service';
 import { of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { Workspace } from 'src/app/common/workspace';
+import { Workspace } from 'src/app/models/workspace';
 
 const mockWorkspace = new Blockly.WorkspaceSvg(new Blockly.Options({}));;
 const mockWorkspaces = [
@@ -29,7 +29,7 @@ const mockDataService = {
   getWorkspaces: jasmine.createSpy('getWorkspaces').and.returnValue(of(mockWorkspaces))
 };
 
-fdescribe('BlocklyComponent', () => {
+describe('BlocklyComponent', () => {
   let component: BlocklyComponent;
   let fixture: ComponentFixture<BlocklyComponent>;
 

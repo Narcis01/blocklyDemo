@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as Blockly from 'blockly';
 import { BlocklyGeneratorService } from 'src/app/services/blockly-generator.service';
-import {javascriptGenerator} from 'blockly/javascript';
 import { DataService } from 'src/app/services/data.service';
-import { Workspace } from 'src/app/common/workspace';
+import { Workspace } from 'src/app/models/workspace';
 
 @Component({
   selector: 'app-blockly',
@@ -16,6 +15,8 @@ export class BlocklyComponent implements OnInit {
   workspaceToSave: Workspace = new Workspace;
   loadWorkspaces!: Workspace[];
   inputTitle: string = '';
+  showWorkspaces: boolean = false;
+  showSaveWorkspaceForm: boolean = false;
   constructor(private generateService: BlocklyGeneratorService,
               private dataService: DataService
   ) { }
@@ -84,8 +85,16 @@ export class BlocklyComponent implements OnInit {
           console.log("Workspaces loaded");
       }
     )
-  }
+  };
 
+  showSavedWorkspaces(){
+    if(this.showWorkspaces == true) this.showWorkspaces = false;
+    else this.showWorkspaces = true;
+  }
+  showSaveForum(){
+    if(this.showSaveWorkspaceForm == true) this.showSaveWorkspaceForm = false;
+    else this.showSaveWorkspaceForm = true;
+  }
 }
 
 

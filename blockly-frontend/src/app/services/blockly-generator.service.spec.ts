@@ -3,7 +3,6 @@ import { BlocklyGeneratorService } from './blockly-generator.service';
 import { DataService } from './data.service';
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import * as Blockly from 'blockly';
 
 const mockCategories = [
   {
