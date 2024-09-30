@@ -17,6 +17,7 @@ export class BlocklyComponent implements OnInit {
   inputTitle: string = '';
   showWorkspaces: boolean = false;
   showSaveWorkspaceForm: boolean = false;
+  resultRunCode: string = '';
   constructor(private generateService: BlocklyGeneratorService,
               private dataService: DataService
   ) { }
@@ -25,7 +26,9 @@ export class BlocklyComponent implements OnInit {
     this.initializeBlockly();
     this.loadTableWorkspace();
   }
-
+  /**
+   * create the workspace with custom blocks and custom theme
+   */
   initializeBlockly(): void {
     this.generateService.generateBlocks().then((workspace) => {
       this.workspace = workspace;
@@ -34,21 +37,29 @@ export class BlocklyComponent implements OnInit {
     });
     
   }
-
+  /**
+   * log the parent blocks and the children attached to them
+   */
   runCode(): void {
- 
+    this.resultRunCode = '';
+    // get blocks from the top to botton 
     const blocks = this.workspace.getTopBlocks(true);
     blocks.forEach((block) => {
-      console.log(`For block type: ${block.type} we have the attached:`)
+      // log every parent block name
+      this.resultRunCode += `For the machine: ${block.tooltip} with the attached blocks: `;
       let attachedBlocks = this.getAllConnectedBlocks(block);
+      // log every child block from the parent
       attachedBlocks.forEach((attachedBlock) =>{
-        console.log(attachedBlock.type);
+        this.resultRunCode += `${attachedBlock.tooltip} `;
       })
-
-      console.log("  ");
+      this.resultRunCode += '\n';
     })
   };
-
+  /**
+   * 
+   * @param block parent block from the workspace
+   * @returns array with all connected children blocks
+   */
   getAllConnectedBlocks(block: Blockly.Block): Blockly.Block[] {
     let connectedBlocks = [];
     let nextBlock = block.getNextBlock();
@@ -58,26 +69,37 @@ export class BlocklyComponent implements OnInit {
     }
     return connectedBlocks;
   }
-
+  /**
+   * save current workspace
+   */
   saveWorkspace() {
+    // convert workspace to DOM
     const xml = Blockly.Xml.workspaceToDom(this.workspace);
+    // convert DOM to text
     const xmlText = Blockly.Xml.domToText(xml);
     this.workspaceToSave.content = xmlText;
     this.workspaceToSave.title = this.inputTitle;
+    // save workspace and load the workspaces
     this.dataService.saveWorkspace(this.workspaceToSave).subscribe( () => this.loadTableWorkspace());
   }
-
+  /**
+   * Change the current workspace with a selected workspace 
+   * @param workspaceString workspace content from the selected workspace 
+   */
   loadWorkspace(workspaceString: string) {
-    
     if (workspaceString) {
+      // convert xml to DOM
       const xml = Blockly.utils.xml.textToDom(workspaceString);
+      // load the workspace 
       Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, this.workspace);
       console.log('Workspace loaded');
     } else {
       console.log('No workspace saved in localStorage');
     }
   }
-
+  /**
+   * Get saved workspaces from the database
+   */
   loadTableWorkspace(){
     this.dataService.getWorkspaces().subscribe(
       data => {
@@ -91,6 +113,7 @@ export class BlocklyComponent implements OnInit {
     if(this.showWorkspaces == true) this.showWorkspaces = false;
     else this.showWorkspaces = true;
   }
+  
   showSaveForum(){
     if(this.showSaveWorkspaceForm == true) this.showSaveWorkspaceForm = false;
     else this.showSaveWorkspaceForm = true;

@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import * as Blockly from 'blockly';
 
 import { BlocklyComponent } from './blockly.component';
-import { DebugElement } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BlocklyGeneratorService } from 'src/app/services/blockly-generator.service';
 import { DataService } from 'src/app/services/data.service';
@@ -58,7 +57,7 @@ describe('BlocklyComponent', () => {
   it('should initialize Blockly', async () => {
     await component.initializeBlockly();
     expect(mockGenerateService.generateBlocks).toHaveBeenCalled();
-    expect(component.workspace).toEqual(mockWorkspace); // Use .toEqual()
+    expect(component.workspace).toEqual(mockWorkspace); 
   });
 
   it('should load table workspace', () => {
@@ -69,14 +68,14 @@ describe('BlocklyComponent', () => {
   it('should save workspace', () => {
     component.workspace = mockWorkspace;
     component.inputTitle = 'Test Workspace';
-    component.workspaceToSave.id = 1; // Ensure workspace has ID set
+    component.workspaceToSave.id = 1; 
     component.saveWorkspace();
-    expect(mockDataService.saveWorkspace).toHaveBeenCalled(); // Use stubWorkspace here
+    expect(mockDataService.saveWorkspace).toHaveBeenCalled(); 
   });
 
   it('should load workspace', () => {
     spyOn(Blockly.Xml, 'clearWorkspaceAndLoadFromXml').and.callThrough();
-    const workspaceString = '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'; // Adjusted XML namespace
+    const workspaceString = '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'; 
     component.workspace = mockWorkspace;
     component.loadWorkspace(workspaceString);
     expect(Blockly.Xml.clearWorkspaceAndLoadFromXml).toHaveBeenCalled();

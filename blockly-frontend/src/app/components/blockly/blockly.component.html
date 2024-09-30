@@ -10,25 +10,25 @@
         <div class="col-5" *ngIf="showWorkspaces">
             <div class="row">
 
-                <div>
-                    <div *ngFor="let workspace of loadWorkspaces"
-                        class="d-flex justify-content-center bd-highlight mb-2">
-                        <div class="h-50 align-self-center p-2 bd-highlight">
-                            {{workspace.title}}
-                        </div>
-                        <button class="btn btn-info m-2" (click)="loadWorkspace(workspace.content)">
-                            Load Workspace
-                        </button>
-
+                <div class="d-flex flex-column justify-content-start bd-highlight mb-2" id="workspaceList">
+                    <div *ngFor="let workspace of loadWorkspaces" class="d-flex justify-content-between align-items-center mb-2 p-2 bd-highlight">
+                      <div class="align-self-center">
+                        {{workspace.title}}
+                      </div>
+                      <button class="btn btn-info" (click)="loadWorkspace(workspace.content)">
+                        Load Workspace
+                      </button>
                     </div>
-                </div>
+                  </div>
+                  
+
             </div>
         </div>
     </div>
     <div class="d-flex justify-content-center bd-highlight mb-2">
         <button class="btn btn-primary m-2" (click)="runCode()">Run Code</button>
         <button class="btn btn-success m-2" (click)="showSavedWorkspaces()">Show saved workspaces</button>
-        <button class="btn btn-success m-2" (click)="showSaveForum()">Show save workspace form</button>
+        <button class="btn btn-info m-2" (click)="showSaveForum()">Save workspace form</button>
     </div>
     <div class="d-flex justify-content-center bd-highlight" *ngIf="showSaveWorkspaceForm">
         <div class="h-50 align-self-center p-2 bd-highlight">
@@ -39,5 +39,8 @@
         </div>
     </div>
 
+    <div class="d-flex justify-content-center bd-highlight mb-2">
+       <pre  id="resultRunCode"> {{resultRunCode}} </pre>
+    </div>
 
 </div>
