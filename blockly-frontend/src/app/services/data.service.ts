@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Category } from '../models/category';
 import { Workspace } from '../models/workspace';
+import { Machine } from '../models/machine';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,12 @@ export class DataService {
 
   getWorkspaces(): Observable<Workspace[]>{
     return this.http.get<Workspace[]>(this.workspaceURL);
+  }
+  // this simulates the api call to get the response from the simulation 
+  getWorkspaceResponse(machine: Machine): string{
+    let result: string = `Parent ${machine.name} with errors: `;
+    machine.errors.forEach(error => result += `${error.description} `);
+    return result;
   }
 
 }

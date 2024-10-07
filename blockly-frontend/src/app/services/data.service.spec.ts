@@ -2,6 +2,22 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { DataService } from './data.service';
 
+const mockError = [
+  {
+    id: 1,
+    description: "error_1"
+  },
+  {
+    id: 2,
+    description: "error_2"
+  }]
+
+const mockMachine = {
+  id: 1,
+  name: 'Test Machine',
+  errors: mockError
+}
+
 describe('DataService', () => {
   let service: DataService;
   let httpTestingController: HttpTestingController;
@@ -79,9 +95,15 @@ describe('DataService', () => {
       expect(response).toBeTruthy();
       expect(response).toEqual(mockWorkspace);
     });
-    
+
     const req = httpTestingController.expectOne('http://localhost:8080/api/workspace');
     expect(req.request.method).toEqual("POST");
     req.flush(mockWorkspace);
   });
+
+  it('should get response from backend', () => {
+    const response = service.getWorkspaceResponse(mockMachine);
+    const expectResponse = 'Parent Test Machine with errors: error_1 error_2 ';
+    expect(response).toEqual(expectResponse);
+  })
 });

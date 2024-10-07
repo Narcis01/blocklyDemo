@@ -3,6 +3,8 @@ import * as Blockly from 'blockly';
 import { BlocklyGeneratorService } from 'src/app/services/blockly-generator.service';
 import { DataService } from 'src/app/services/data.service';
 import { Workspace } from 'src/app/models/workspace';
+import { Machine } from 'src/app/models/machine';
+import { ErrorMachine } from 'src/app/models/errorMachine';
 
 @Component({
   selector: 'app-blockly',
@@ -12,7 +14,7 @@ import { Workspace } from 'src/app/models/workspace';
 export class BlocklyComponent implements OnInit {
 
   workspace!: Blockly.WorkspaceSvg;
-  workspaceToSave: Workspace = new Workspace;
+  workspaceToSave!: Workspace;
   loadWorkspaces!: Workspace[];
   inputTitle: string = '';
   showWorkspaces: boolean = false;
@@ -42,17 +44,22 @@ export class BlocklyComponent implements OnInit {
    */
   runCode(): void {
     this.resultRunCode = '';
+    let errors: ErrorMachine[] = [];
     // get blocks from the top to botton 
     const blocks = this.workspace.getTopBlocks(true);
     blocks.forEach((block) => {
-      // log every parent block name
-      this.resultRunCode += `For the machine: ${block.tooltip} with the attached blocks: `;
-      let attachedBlocks = this.getAllConnectedBlocks(block);
-      // log every child block from the parent
-      attachedBlocks.forEach((attachedBlock) =>{
-        this.resultRunCode += `${attachedBlock.tooltip} `;
+      // get the connected blocks from the parent
+      const errorBlocks = this.getAllConnectedBlocks(block);
+      errorBlocks.forEach(error => {
+        errors.push({id: 0, description: error.tooltip.toString()})
       })
+      //create a machine with selected errors
+      const machine: Machine = {id: 0, name: block.tooltip.toString(), errors: errors};
+
+      //send it to the backend and get the response
+      this.resultRunCode += this.dataService.getWorkspaceResponse(machine);
       this.resultRunCode += '\n';
+
     })
   };
   /**
@@ -77,8 +84,7 @@ export class BlocklyComponent implements OnInit {
     const xml = Blockly.Xml.workspaceToDom(this.workspace);
     // convert DOM to text
     const xmlText = Blockly.Xml.domToText(xml);
-    this.workspaceToSave.content = xmlText;
-    this.workspaceToSave.title = this.inputTitle;
+    this.workspaceToSave = {content: xmlText, title: this.inputTitle, id: 0}
     // save workspace and load the workspaces
     this.dataService.saveWorkspace(this.workspaceToSave).subscribe( () => this.loadTableWorkspace());
   }

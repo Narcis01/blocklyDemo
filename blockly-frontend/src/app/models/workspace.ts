@@ -1,5 +1,5 @@
-export class Workspace {
-    id!: number;
-    content!: string;
-    title!: string;
+export interface Workspace {
+    id: number;
+    content: string;
+    title: string;
 }

@@ -1,5 +1,5 @@
 
-export interface Error {
+export interface ErrorMachine {
     id: number;
     description: string;
 }

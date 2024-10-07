@@ -68,7 +68,7 @@ describe('BlocklyComponent', () => {
   it('should save workspace', () => {
     component.workspace = mockWorkspace;
     component.inputTitle = 'Test Workspace';
-    component.workspaceToSave.id = 1; 
+    component.workspaceToSave = { id: 1, content: "content", title: "Test Workspace"}; 
     component.saveWorkspace();
     expect(mockDataService.saveWorkspace).toHaveBeenCalled(); 
   });
